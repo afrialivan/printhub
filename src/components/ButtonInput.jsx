@@ -148,13 +148,32 @@ const ButtonInput = ({ sellerId, product, user }) => {
 
   return (
     <div>
-      <button onClick={decrementKeranjang}>-</button>
-      <input
-        type="number"
-        value={jumlah}
-        disabled
-      />
-      <button onClick={incrementKeranjang}>+</button>
+      <div>
+        <button className="px-3 py-1 bg-[#7077A1] text-white rounded-l-lg border-t border-b border-l border-r-0">-</button>
+        <input
+          className="text-center py-1 w-12 border-t border-b border-l-0 border-r-0 text-black"
+          value={0}
+          type="number"
+          disabled
+        />
+        <button className="px-3 py-1 bg-[#7077A1] text-white rounded-r-lg border-t border-b border-r- border-l-0">+</button>
+      </div>
+
+
+
+
+
+
+
+      <div className="hidden">
+        <button onClick={decrementKeranjang}>-</button>
+        <input
+          type="number"
+          value={jumlah}
+          disabled
+        />
+        <button onClick={incrementKeranjang}>+</button>
+      </div>
     </div>
   )
 }

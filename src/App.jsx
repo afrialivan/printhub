@@ -23,6 +23,8 @@ import ChatSeller from './containers/pages/Seller/ChatSeller'
 import DashboardDriver from './containers/pages/Driver/DashboardDriver'
 import ViewOrder from './containers/pages/Driver/ViewOrder'
 import NewUser from './containers/pages/NewUser'
+import Map from './containers/pages/User/Map'
+import Keranjang from './containers/pages/User/Keranjang'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -54,11 +56,15 @@ const App = () => {
       element: <PrivateRoutes><ChatSeller /></PrivateRoutes>
     },
     {
+      path: "/seller/map",
+      element: <PrivateRoutes><Map /></PrivateRoutes>
+    },
+    {
       path: "/pesanan",
       element: <PrivateRoutes><Pesanan /></PrivateRoutes>
     },
     {
-      path: "/pesanan/pesanan-detail/:id",
+      path: "/pesanan/detail",
       element: <PrivateRoutes><PesananDetail /></PrivateRoutes>
     },
     {
@@ -90,8 +96,12 @@ const App = () => {
       element: <PrivateRoutes><Seller /></PrivateRoutes>
     },
     {
-      path: "/seller/print/:id",
+      path: "/seller/print",
       element: <PrivateRoutes><Print /></PrivateRoutes>
+    },
+    {
+      path: "/seller/keranjang",
+      element: <PrivateRoutes><Keranjang /></PrivateRoutes>
     },
     {
       path: "/register-seller",

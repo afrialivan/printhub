@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import Navbar from '../../components/Navbar'
 
-const Main = ({ children }) => {
+const Main = ({ children, title }) => {
   return (
-    <>
-      <Navbar />
+    <div className='overflow-x-hidden bg-white text-black px-5 mt-3 relative'>
       { children }
-    </>
+      <Navbar title={title} />
+    </div>
   )
 }
 

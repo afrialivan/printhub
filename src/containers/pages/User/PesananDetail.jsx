@@ -1,12 +1,14 @@
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { db, storage } from "../../../config/firebase"
-import { Link, useNavigate, useParams } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 
 const PesananDetail = () => {
-  const { id } = useParams()
-  const [myOrder, setMyOrder] = useState({ status: 0, keranjang: [] })
+  // const { id } = useParams()
+  const location = useLocation()
+  const order = JSON.parse(location.state.order)
+  // const [myOrder, setMyOrder] = useState({ status: 0, keranjang: [] })
   const [seller, setSeller] = useState()
   const [paymentView, setPaymentView] = useState()
   const [fileUpload, setFileUpload] = useState(null)
@@ -21,7 +23,7 @@ const PesananDetail = () => {
       const filteredOrder = dataOrder.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id
-      })).find(data => data.id === id)
+      })).find(data => data.id === order.id)
       const dataSeller = await getDocs(sellerCollectionRef)
       const filteredSeller = dataSeller.docs.map((doc) => ({
         ...doc.data(),
@@ -33,7 +35,7 @@ const PesananDetail = () => {
 
       setSeller(filteredSeller)
       setPaymentView(filterPay ? false : true)
-      setMyOrder(filteredOrder)
+      // setMyOrder(filteredOrder)
 
     } catch (err) {
       console.error(err)
@@ -51,9 +53,8 @@ const PesananDetail = () => {
       const snapshot = await uploadBytes(fileRef, fileUpload)
       const urls = await getDownloadURL(snapshot.ref)
 
-      const orderDoc = doc(db, "order", myOrder.id)
-      await updateDoc(orderDoc, { ...myOrder, bukti: urls })
-      setMyOrder({ ...myOrder, bukti: urls })
+      const orderDoc = doc(db, "order", order.id)
+      await updateDoc(orderDoc, { ...order, bukti: urls })
       setFileUpload(urls)
       console.log('updated successfully');
       navigate('/pesanan')
@@ -71,9 +72,8 @@ const PesananDetail = () => {
 
   const terimaPesanan = async () => {
     try {
-      const orderDoc = doc(db, "order", myOrder.id)
-      await updateDoc(orderDoc, { ...myOrder, status: 'selesai' })
-      setMyOrder({ ...myOrder, status: 'selesai' })
+      const orderDoc = doc(db, "order", order.id)
+      await updateDoc(orderDoc, { ...order, status: 'selesai' })
       navigate('/')
     } catch (error) {
       console.error(error);
@@ -82,58 +82,99 @@ const PesananDetail = () => {
 
 
   return (
-    <div>
-      detail pesanan
-      <div>
-        <ul>
-          {myOrder?.keranjang.map((item) =>
-            <li key={item.id}>
-              <div>{item.nama}</div>
-              <div>jumlah {item.jumlah}</div>
-              <div>harga satuan {item.harga}</div>
-              {
-                item.printUrl !== 0 ?
-                  <Link to={item.printUrl} target="_blank">Preview</Link> :
-                  ''
-              }
-            </li>
-          )}
-        </ul>
-        <div>
-          total harga {myOrder?.total}
-        </div>
-        <br />
-        <div>
-          {paymentView && Number(myOrder.bukti) === 0 &&
-            <div>
-              <div>
-                <div>
-                  atas nama {seller.namaRekening}, bank: {seller.bank}
+    <div className="overflow-x-hidden bg-white text-black px-5 mt-3 relative">
+      <p className="text-lg text-center text-[#2D3256] font-semibold">Pesanan Saya</p>
+      <div className="bg-[#7077A1] rounded-lg px-4 py-2 mt-3">
+        <p className="text-white font-medium text-center">Rincian Pesanan</p>
+        <div className="flex flex-col gap-3">
+          {order.keranjang.map((item) =>
+            <div key={item.id}>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <div className="w-20 h-20 bg-black rounded-lg">
+                    img
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-white font-medium text-lg">{item.nama}</p>
+                    <p className="text-white">Rp.{item.harga}</p>
+                    {item.printUrl !== 0 &&
+                      <>
+                        <Link className="no-underline" to={item.printUrl}>
+                          <p className="text-white">Preview File</p>
+                        </Link>
+                        <p className="text-white">catatan: {item.catatan == 0 ? '-' : item.catatan}</p>
+                      </>
+                    }
+                  </div>
                 </div>
-                Nomor Rekening: {seller.rekening}
-              </div>
-              <br />
-              <div>
-                <input type="file" onChange={fileInput} />
-                <button onClick={uploadBukti}>Upload Bukti</button>
                 <div>
-                  {
-                    previewFile ?
-                      <Link to={previewFile} target="_blank" >preview</Link>
-                      : ''
-                  }
+                  <p className="text-white text-lg">x{item.jumlah}</p>
                 </div>
               </div>
             </div>
-          }
-        </div>
-        <div>
-          {myOrder.status === 'dikirim' &&
-            <button onClick={terimaPesanan}>Pesanan Diterima</button>
-          }
+          )}
+
+          <div className="mt-2">
+            <p className="text-white text-xl font-semibold -mb-1">Rp.{order.total}</p>
+            <p className="text-sm text-white">Nomor invoice: {order.id}</p>
+          </div>
         </div>
       </div>
-    </div>
+
+
+      <div className="hidden">
+        detail pesanan
+        <div>
+          <ul>
+            {order?.keranjang.map((item) =>
+              <li key={item.id}>
+                <div>{item.nama}</div>
+                <div>jumlah {item.jumlah}</div>
+                <div>harga satuan {item.harga}</div>
+                {
+                  item.printUrl !== 0 ?
+                    <Link to={item.printUrl} target="_blank">Preview</Link> :
+                    ''
+                }
+              </li>
+            )}
+          </ul>
+          <div>
+            total harga {order?.total}
+          </div>
+          <br />
+          <div>
+            {paymentView && Number(order.bukti) === 0 &&
+              <div>
+                <div>
+                  <div>
+                    atas nama {seller.namaRekening}, bank: {seller.bank}
+                  </div>
+                  Nomor Rekening: {seller.rekening}
+                </div>
+                <br />
+                <div>
+                  <input type="file" onChange={fileInput} />
+                  <button onClick={uploadBukti}>Upload Bukti</button>
+                  <div>
+                    {
+                      previewFile ?
+                        <Link to={previewFile} target="_blank" >preview</Link>
+                        : ''
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+          <div>
+            {order.status === 'dikirim' &&
+              <button onClick={terimaPesanan}>Pesanan Diterima</button>
+            }
+          </div>
+        </div>
+      </div>
+    </div >
   )
 }
 

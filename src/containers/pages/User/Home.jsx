@@ -46,7 +46,7 @@ const Home = () => {
     <Main title="Home" >
       <div className="flex justify-between items-center mt-2">
         <div>
-          <p className="text-[#2D3250] font-medium -mb-1">Hi Afrial</p>
+          <p className="text-[#2D3250] font-medium -mb-1">Hi tes</p>
           <p className="text-[#F6B17A] text-sm">Bagaimana keadaanmu sekarang?</p>
         </div>
         <details className="dropdown bg-transparent">

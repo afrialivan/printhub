@@ -77,7 +77,13 @@ const Seller = () => {
       await updateDoc(sellerUpdateCollectionRef, updatedData(dataUserSellerMap))
       console.log('update');
     }
-    navigate(`/chat/${replacedString.toLowerCase() + auth.currentUser.uid}/${id}`)
+    // navigate(`/chat/${replacedString.toLowerCase() + auth.currentUser.uid}/${id}`)
+    navigate(`/chat`, {
+      state: {
+        seller: JSON.stringify(seller),
+        idRoom: JSON.stringify(replacedString.toLowerCase() + auth.currentUser.uid)
+      }
+    })
   }
 
   useEffect(() => {

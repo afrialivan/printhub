@@ -1,6 +1,7 @@
-import { useState } from "react"
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react"
 import { auth, db, googleProvider } from '../../config/firebase'
-import { createUserWithEmailAndPassword, signInWithPopup, signOut, signInWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signOut, signInWithEmailAndPassword, signInWithRedirect } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 import { collection, getDocs } from "firebase/firestore"
 import '../../assets/styles/login.css'
@@ -11,12 +12,16 @@ const { emailIcon, passwordIcon, viewDisable, googleIcon } = images
 
 
 const Auth = () => {
-
-
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const navigate = useNavigate()
   const userCollectionRef = collection(db, "user")
+
+  useEffect(() => {
+    if (auth.currentUser) {
+      navigate('/')
+    }
+  }, [])
 
   const register = async (event) => {
     event.preventDefault()
@@ -50,7 +55,7 @@ const Auth = () => {
 
   const signInWithGoogle = async () => {
     try {
-      const data = await signInWithPopup(auth, googleProvider)
+      const data = await signInWithRedirect(auth, googleProvider)
       const dataUser = await getDocs(userCollectionRef)
       const userFiltered = dataUser?.docs?.map((doc) => ({
         ...doc.data(),

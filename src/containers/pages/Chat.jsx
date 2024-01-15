@@ -1,13 +1,19 @@
 import { addDoc, collection, onSnapshot, query, serverTimestamp, where } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { auth, db } from "../../config/firebase"
-import { useParams } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 
 const Chat = () => {
   // const [seller, setSeller] = useState({})
+  const location = useLocation()
+  const seller = JSON.parse(location.state.seller)
+  const idRoom = JSON.parse(location.state.idRoom)
+  console.log(seller);
+  console.log(idRoom);
+
   const [newMessage, setNewMessage] = useState("")
   const [messages, setMessages] = useState([])
-  const { id, room } = useParams()
+  // const { id, room } = useParams()
   const chatRef = collection(db, "chat")
 
   // const getData = async () => {
@@ -24,7 +30,7 @@ const Chat = () => {
 
   useEffect(() => {
     // getData()
-    const queryMessages = query(chatRef, where("room", "==", room + id))
+    const queryMessages = query(chatRef, where("room", "==", idRoom))
     const unsuscribe = onSnapshot(queryMessages, (snapshot) => {
       let messages = []
       snapshot.forEach((doc) => {
@@ -48,8 +54,8 @@ const Chat = () => {
       createAt: serverTimestamp(),
       userId: auth.currentUser.uid,
       name: auth.currentUser.displayName,
-      sellerId: id,
-      room: room + id
+      sellerId: seller.id,
+      room: idRoom
     })
     setNewMessage("")
   }

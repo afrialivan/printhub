@@ -7,6 +7,7 @@ import { initializeSeller } from "../../../reducers/sellerReducer";
 import { collection, getDocs } from "firebase/firestore";
 import { auth, db } from "../../../config/firebase";
 import images from "../../../assets/img/Image";
+import { signOut } from "firebase/auth";
 
 const Home = () => {
   const { avatar, homeIcon, printIcon, atkIcon, lainnyaIcon } = images
@@ -33,6 +34,14 @@ const Home = () => {
 
   const sellers = useSelector(state => state.seller)
 
+  const logout = async () => {
+    try {
+      await signOut(auth)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   return (
     <Main title="Home" >
       <div className="flex justify-between items-center mt-2">
@@ -40,9 +49,18 @@ const Home = () => {
           <p className="text-[#2D3250] font-medium -mb-1">Hi Afrial</p>
           <p className="text-[#F6B17A] text-sm">Bagaimana keadaanmu sekarang?</p>
         </div>
-        <div className="w-12 h-12 rounded-full bg-[#2D3250] ring-2 border-[#2D3250] overflow-hidden block">
-          <img src={avatar} alt="" className="m-auto w-full" />
-        </div>
+        <details className="dropdown bg-transparent">
+          <summary className="m-1 btn bg-transparent shadow-none">
+            <div className="w-12 h-12 rounded-full bg-[#2D3250] ring-2 border-[#2D3250] overflow-hidden block">
+              <img src={avatar} alt="" className="m-auto w-full" />
+            </div>
+          </summary>
+          <ul className="p-2 mt-1 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-20">
+            <li>
+              <div onClick={logout}>Logout</div>
+            </li>
+          </ul>
+        </details>
       </div>
 
       <div className="flex justify-between items-center bg-[#7077A1] h-40 rounded-3xl mt-7 px-4">
@@ -79,7 +97,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div>
+      <div className="">
         <p className="text-[#2D3250] font-semibold mt-5">Toko Terdekat</p>
         <div className="mt-4 flex flex-col gap-3">
           {sellers.map(seller => (

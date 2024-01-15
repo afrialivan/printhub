@@ -25,6 +25,7 @@ import ViewOrder from './containers/pages/Driver/ViewOrder'
 import NewUser from './containers/pages/NewUser'
 import Map from './containers/pages/User/Map'
 import Keranjang from './containers/pages/User/Keranjang'
+import ChatList from './containers/pages/User/ChatList'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -48,7 +49,11 @@ const App = () => {
       element: <PrivateRoutes><NewUser /></PrivateRoutes>
     },
     {
-      path: "/chat/:room/:id",
+      path: "/chat-list",
+      element: <PrivateRoutes><ChatList /></PrivateRoutes>
+    },
+    {
+      path: "/chat",
       element: <PrivateRoutes><Chat /></PrivateRoutes>
     },
     {

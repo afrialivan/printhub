@@ -18,7 +18,7 @@ const Navbar = ({ title }) => {
         <img src={homeNav} className='w-6' alt="" />
         <p className='font-medium text-white -mt-2'>Beranda</p>
       </div>
-      <div className='flex items-center flex-col z-20'>
+      <div className='flex items-center flex-col z-20' onClick={() => navigate('/chat-list')}>
         <img src={chatNav} className='w-7' alt="" />
         <p className='font-medium text-white -mt-0'>Obrolan</p>
       </div>

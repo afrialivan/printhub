@@ -1,7 +1,6 @@
 import { collection, getDocs } from "firebase/firestore"
 import { auth, db } from "../../../config/firebase"
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
 import Main from "../../templates/Main"
 import PesananComponent from "../../../components/PesananComponent"
 
@@ -17,7 +16,7 @@ const Pesanan = () => {
         ...doc.data(),
         id: doc.id
       })).filter(data => data.userId === auth?.currentUser?.uid)
-
+      // console.log(filteredOrder.filter((data) => data.status === 'belum'));
       setOrderList(filteredOrder)
 
     } catch (err) {
@@ -72,75 +71,6 @@ const Pesanan = () => {
           aktif={aktif}
         />
       }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      <div className="hidden">
-        <div>
-          <p>belum konfirmasi harga</p>
-          {orderList.filter((data) => data.status === 0).map((item) =>
-            <div key={item.id}>
-              <li>
-                <Link to={`/pesanan/pesanan-detail/${item.id}`} >{item.namaSeller}</Link>
-              </li>
-            </div>
-          )}
-        </div>
-        <div>
-          <p>belum bayar</p>
-          {orderList.filter((data) => data.status === 'belum').map((item) =>
-            <div key={item.id}>
-              <li>
-                <Link to={`/pesanan/pesanan-detail/${item.id}`} >{item.namaSeller}</Link>
-              </li>
-            </div>
-          )}
-        </div>
-        <div>
-          <p>proses </p>
-          {orderList.filter((data) => data.status == 'proses').map((item) =>
-            <div key={item.id}>
-              <li>
-                <Link to={`/pesanan/pesanan-detail/${item.id}`} >{item.namaSeller}</Link>
-              </li>
-            </div>
-          )}
-        </div>
-        <div>
-          <p>dikirim</p>
-          {orderList.filter((data) => data.status === 'dikirim').map((item) =>
-            <div key={item.id}>
-              <li>
-                <Link to={`/pesanan/pesanan-detail/${item.id}`} >{item.namaSeller}</Link>
-              </li>
-            </div>
-          )}
-        </div>
-        <div>
-          <p>selesai</p>
-          {orderList.filter((data) => data.status === 'selesai').map((item) =>
-            <div key={item.id}>
-              <li>
-                <Link to={`/pesanan/pesanan-detail/${item.id}`} >{item.namaSeller}</Link>
-              </li>
-            </div>
-          )}
-        </div>
-      </div>
     </Main>
   )
 }

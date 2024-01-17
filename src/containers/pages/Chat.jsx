@@ -1,32 +1,19 @@
 import { addDoc, collection, onSnapshot, query, serverTimestamp, where } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { auth, db } from "../../config/firebase"
-import { useLocation } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
+import Default from "../templates/Default"
+import images from "../../assets/img/Image";
+const { backIcon } = images
 
 const Chat = () => {
-  // const [seller, setSeller] = useState({})
   const location = useLocation()
   const seller = JSON.parse(location.state.seller)
-  const idRoom = JSON.parse(location.state.idRoom)
-  console.log(seller);
-  console.log(idRoom);
-
+  const idRoom = location.state.idRoom
+  const backLink = location.state.backLink
   const [newMessage, setNewMessage] = useState("")
   const [messages, setMessages] = useState([])
-  // const { id, room } = useParams()
   const chatRef = collection(db, "chat")
-
-  // const getData = async () => {
-  //   const sellerCollectionRef = collection(db, "seller")
-  //   const data = await getDocs(sellerCollectionRef)
-  //   const dataSellerMap = data?.docs?.map((doc) => ({
-  //     ...doc.data(),
-  //     id: doc.id
-  //   })).find((item) => item.id === id)
-  //   setSeller(dataSellerMap)
-
-  // }
-
 
   useEffect(() => {
     // getData()
@@ -36,7 +23,14 @@ const Chat = () => {
       snapshot.forEach((doc) => {
         messages.push({ ...doc.data(), id: doc.id })
       })
-      setMessages(messages)
+      // const compareByTime = (a, b) => {
+      //   const timeA = new Date(a.createAt).getTime();
+      //   const timeB = new Date(b.createAt).getTime();
+
+      //   return timeA - timeB;
+      // }
+      let sortedArray = messages.sort((a, b) => a.createAt?.seconds - b.createAt?.seconds);
+      setMessages(sortedArray)
     })
 
     return () => unsuscribe()
@@ -61,20 +55,42 @@ const Chat = () => {
   }
 
   return (
-    <div>
+    <Default>
       <div>
-        {messages.map((message) => <h1 key={message.id}> {message.text} </h1>)}
+        <p className="text-lg text-center text-[#2D3256] font-semibold">{seller.sellerName}</p>
       </div>
-      <form onSubmit={handleSubmit} >
+      {messages.map((message, i) =>
+        <div key={i}>
+          {message.userId !== auth.currentUser.uid ?
+            <div className="chat chat-start">
+              {/* <div className="chat-bubble">Itover Anakin, <br />I have the high ground.</div> */}
+              <div className="chat-bubble bg-[#7077A1]">{message.text}</div>
+            </div>
+            :
+            <div className="chat chat-end">
+              <div className="chat-bubble bg-[#7077A1]">{message.text}</div>
+            </div>
+          }
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="fixed flex bottom-3 left-3 right-3 border-[#7077A1] border-solid rounded-lg border">
         <input
+          className="w-5/6 input"
           type="text"
           placeholder="type your massage here..."
           onChange={(e) => setNewMessage(e.target.value)}
           value={newMessage}
         />
-        <button type="submit">Send</button>
+        <button className="w-1/6 border-none bg-[#F6B17A]" type="submit">Send</button>
       </form>
-    </div>
+
+      <div className="fixed top-3 left-3">
+        <Link to={backLink}>
+          <img src={backIcon} alt="" />
+        </Link>
+      </div>
+    </Default>
   )
 }
 

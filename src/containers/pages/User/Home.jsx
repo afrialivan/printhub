@@ -1,18 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux"
 import Main from "../../templates/Main"
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { initializeSeller } from "../../../reducers/sellerReducer";
 import { collection, getDocs } from "firebase/firestore";
 import { auth, db } from "../../../config/firebase";
 import images from "../../../assets/img/Image";
 import { signOut } from "firebase/auth";
+const { avatar, homeIcon, printIcon, atkIcon, lainnyaIcon } = images
 
 const Home = () => {
-  const { avatar, homeIcon, printIcon, atkIcon, lainnyaIcon } = images
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [user, setUser] = useState({ nama: '' })
 
   const getUser = async () => {
     const userCollectionRef = collection(db, "user")
@@ -21,7 +22,7 @@ const Home = () => {
       ...doc.data(),
       id: doc.id
     })).find(data => data.userId === auth.currentUser.uid)
-
+    setUser(filteredUser)
     if (!filteredUser) {
       navigate('/new-user')
     }
@@ -44,9 +45,9 @@ const Home = () => {
 
   return (
     <Main title="Home" >
-      <div className="flex justify-between items-center mt-2">
+      <div className="flex justify-between items-center pt-2">
         <div>
-          <p className="text-[#2D3250] font-medium -mb-1">Hi tes</p>
+          <p className="text-[#2D3250] font-medium -mb-1">Hi {user?.nama}</p>
           <p className="text-[#F6B17A] text-sm">Bagaimana keadaanmu sekarang?</p>
         </div>
         <details className="dropdown bg-transparent">
@@ -55,10 +56,15 @@ const Home = () => {
               <img src={avatar} alt="" className="m-auto w-full" />
             </div>
           </summary>
-          <ul className="p-2 mt-1 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-20">
+          <ul className="p-2 mt-1 shadow menu bg-white dropdown-content z-[1] rounded-box w-20">
             <li>
-              <div onClick={logout}>Logout</div>
+              <div onClick={logout} >Logout</div>
             </li>
+            {user.role === 'driver' &&
+              <li>
+                <div onClick={() => navigate('/driver')} >Driver</div>
+              </li>
+            }
           </ul>
         </details>
       </div>
@@ -102,9 +108,9 @@ const Home = () => {
         <div className="mt-4 flex flex-col gap-3">
           {sellers.map(seller => (
             // <Link key={seller.id} to={`/seller/${seller.id}`} >
-            <div className="no-underline" key={seller.id} onClick={() => navigate(`/seller/${seller.id}`)}>
+            <div className="no-underline" key={seller.id} onClick={() => navigate(`/toko/${seller.id}`)}>
               <div className="flex items-center">
-                <div className="w-20 h-20 bg-black rounded-2xl overflow-hidden">
+                <div style={{ backgroundImage: `url(${seller.gambar})` }} className="bg-cover w-20 h-20 bg-black rounded-2xl overflow-hidden">
                   img
                 </div>
                 <div className="ml-3">
@@ -116,27 +122,6 @@ const Home = () => {
             </div>
             // </Link>
           ))}
-        </div>
-      </div>
-
-
-
-      <div className="hidden">
-        <div>Halaman Home</div>
-        <div>
-          <ul>
-            {sellers.map(seller => (
-              <Link key={seller.id} to={`/seller/${seller.id}`} >
-                <li>
-                  <p>{seller.sellerName}</p>
-                </li>
-              </Link>
-            ))}
-          </ul>
-        </div>
-        <br /><br />
-        <div>
-          <Link to={'/pesanan'}>Lihat Pesanan</Link>
         </div>
       </div>
     </Main>

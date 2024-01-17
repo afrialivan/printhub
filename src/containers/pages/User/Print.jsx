@@ -9,9 +9,9 @@ import { useSelector } from "react-redux"
 
 const Print = () => {
   const [fileUpload, setFileUpload] = useState(null)
-  const [catatan, setCatatan] = useState('')
+  const [catatan, setCatatan] = useState()
   const [jumlah, setJumlah] = useState()
-  const [warnaKertas, setWarnaKertas] = useState()
+  const [warnaKertas, setWarnaKertas] = useState("Berwarna")
   const [jenisKertas, setJenisKertas] = useState()
   const [ukuranKertas, setUkuranKertas] = useState()
   const [previewFile, setPreviewFile] = useState()
@@ -31,7 +31,7 @@ const Print = () => {
 
   const uploadFile = async () => {
     const keranjangCollectionRef = collection(db, "keranjang")
-    if (!fileUpload) return
+    if (!fileUpload && !jumlah && !jenisKertas && !ukuranKertas) return console.log('isi');
     try {
       const fileRef = ref(storage, `files/${fileUpload.name}`)
       const snapshot = await uploadBytes(fileRef, fileUpload)
@@ -48,7 +48,8 @@ const Print = () => {
         productId: 0,
         totalHarga: 0,
         sellerId: seller.id,
-        userId: auth.currentUser.uid
+        userId: auth.currentUser.uid,
+        gambar: 'https://firebasestorage.googleapis.com/v0/b/printhub-5acff.appspot.com/o/files%2Fprint.png?alt=media&token=a87a5a47-0085-417b-9568-8dcb784d3a8e'
       })
       const userDoc = doc(db, "user", user.id)
       await updateDoc(userDoc, {
@@ -61,67 +62,76 @@ const Print = () => {
           }
         ]
       })
-      alert('sukses')
-      navigate(`/seller/${seller.id}`)
+      navigate(`/toko/${seller.id}`)
     } catch (error) {
       console.error(error)
     }
   }
 
   return (
-    <div className="overflow-x-hidden bg-white text-black px-5 mt-3 relative">
+    <div className="overflow-x-hidden bg-white text-black px-5 pt-3 min-h-screen relative">
       <p className="text-lg text-center text-[#2D3256] font-semibold">Unggah File</p>
 
       <div className="mt-4">
         <div>
           <div>
-
             <div>
-              {/* <input type="number" onChange={(e) => setJumlah(e.target.value)} placeholder="jumlah" /> */}
-            </div>
-
-            <div>
-              {/* <label className="form-control w-full max-w-xs">
-                <div className="label">
-                  <span className="label-text">Masukkan Warna</span>
-                </div>
-                <input type="text" placeholder="Type here" className="input input-bordered max-w-xs" />
-                <div className="label">
-                </div>
-              </label> */}
               <div className="flex gap-2">
                 <div className="flex items-center gap-1">
-                  <input type="radio" name="radio-1" className="w-5 h-5 radio border border-solid" checked />
+                  <input
+                    type="radio"
+                    name="radio-1"
+                    className="w-5 h-5 radio border border-solid"
+                    checked
+                    onClick={() => setWarnaKertas('Berwarna')}
+                  />
                   <p>Berwarna</p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <input type="radio" name="radio-1" className="w-5 h-5 radio border border-solid" />
+                  <input
+                    type="radio"
+                    name="radio-1"
+                    className="w-5 h-5 radio border border-solid"
+                    onClick={() => setWarnaKertas('Hitam Putih')}
+                  />
                   <p>Hitam Putih</p>
                 </div>
               </div>
-              {/* <input type="text" onChange={(e) => setWarnaKertas(e.target.value)} placeholder="warna" /> */}
             </div>
 
             <div className="grid grid-cols-2 grid-flow-row">
-              <select className="select select-bordered max-w-xs">
-                <option disabled selected>Ukuran Kertas</option>
-                <option>A4</option>
-                <option>A3</option>
-                <option>F4</option>
-                <option>Tidak ada</option>
+              <select
+                onChange={(e) => setUkuranKertas(e.target.value)}
+                className="select select-bordered max-w-xs"
+              >
+                <option value="" disabled selected>Ukuran Kertas</option>
+                <option value="A4">A4</option>
+                <option value="A3">A3</option>
+                <option value="F4">F4</option>
+                <option value={"-"}>Tidak ada</option>
               </select>
-              {/* <input type="text" onChange={(e) => setUkuranKertas(e.target.value)} placeholder="ukuran" /> */}
-              <select className="select select-bordered max-w-xs">
-                <option disabled selected>Jenis Kertas</option>
-                <option>HVS</option>
-                <option>Tidak ada</option>
+
+              <select
+                onChange={(e) => setJenisKertas(e.target.value)}
+                className="select select-bordered max-w-xs"
+              >
+                <option value={""} disabled selected>Jenis Kertas</option>
+                <option value={"HVS"}>HVS</option>
+                <option value={"-"}>Tidak ada</option>
               </select>
-              {/* <input type="text" onChange={(e) => setJenisKertas(e.target.value)} placeholder="jenis" /> */}
             </div>
             <div className="grid">
-              <input type="number" placeholder="Jumlah Print" className="input input-bordered max-w-xs" />
-              <textarea placeholder="Catatan" className="textarea textarea-bordered textarea-md max-w-xs" ></textarea>
-              {/* <input type="text" onChange={(e) => setCatatan(e.target.value)} placeholder="catatan" /> */}
+              <input
+                onChange={(e) => setJumlah(e.target.value)}
+                type="number"
+                placeholder="Jumlah Print"
+                className="input input-bordered max-w-xs"
+              />
+              <textarea
+                placeholder="Catatan"
+                className="textarea textarea-bordered textarea-md max-w-xs"
+                onChange={(e) => setCatatan(e.target.value)}
+              ></textarea>
             </div>
 
             <div className="mt-4">
@@ -150,54 +160,11 @@ const Print = () => {
             </div>
 
             <div className="fixed bottom-5 left-4 right-4">
-              <button className="w-full py-4 rounded-3xl border-none bg-[#F6B17A] text-white font-semibold ">Upload</button>
+              <button onClick={uploadFile} className="w-full py-4 rounded-3xl border-none bg-[#F6B17A] text-white font-semibold">Upload</button>
             </div>
 
           </div>
         </div>
-      </div>
-
-
-
-
-      <div className="hidden">
-        <br />
-        halaman print
-        <div>
-          <br />
-          <input
-            type="file"
-            onChange={fileInput} />
-          {
-            previewFile ?
-              <Link to={previewFile} target="_blank" >
-                <div>preview</div>
-              </Link>
-              : ''
-          }
-        </div>
-        <br />
-        <div>
-          <div>
-            <input type="text" onChange={(e) => setCatatan(e.target.value)} placeholder="catatan" />
-          </div>
-          <div>
-            <input type="number" onChange={(e) => setJumlah(e.target.value)} placeholder="jumlah" />
-          </div>
-          <div>
-            <input type="text" onChange={(e) => setWarnaKertas(e.target.value)} placeholder="warna" />
-          </div>
-          <div>
-            <input type="text" onChange={(e) => setUkuranKertas(e.target.value)} placeholder="ukuran" />
-          </div>
-          <div>
-            <input type="text" onChange={(e) => setJenisKertas(e.target.value)} placeholder="jenis" />
-          </div>
-        </div>
-
-        <br />
-        <br />
-        <button onClick={uploadFile}>upload</button>
       </div>
     </div>
   )

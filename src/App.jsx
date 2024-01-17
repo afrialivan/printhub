@@ -26,6 +26,7 @@ import NewUser from './containers/pages/NewUser'
 import Map from './containers/pages/User/Map'
 import Keranjang from './containers/pages/User/Keranjang'
 import ChatList from './containers/pages/User/ChatList'
+import Product from './containers/pages/Seller/Product'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -61,7 +62,7 @@ const App = () => {
       element: <PrivateRoutes><ChatSeller /></PrivateRoutes>
     },
     {
-      path: "/seller/map",
+      path: "/toko/map",
       element: <PrivateRoutes><Map /></PrivateRoutes>
     },
     {
@@ -71,6 +72,10 @@ const App = () => {
     {
       path: "/pesanan/detail",
       element: <PrivateRoutes><PesananDetail /></PrivateRoutes>
+    },
+    {
+      path: "/seller/product",
+      element: <PrivateRoutes><Product /></PrivateRoutes>
     },
     {
       path: "/seller/konfirmasi",
@@ -85,6 +90,10 @@ const App = () => {
       element: <PrivateRoutes><Dashboard /></PrivateRoutes>
     },
     {
+      path: "/seller/dashboard",
+      element: <PrivateRoutes><Dashboard /></PrivateRoutes>
+    },
+    {
       path: "/tes",
       element: <PrivateRoutes><Tes /></PrivateRoutes>
     },
@@ -93,19 +102,19 @@ const App = () => {
       element: <PrivateRoutes><DashboardDriver /></PrivateRoutes>
     },
     {
-      path: "/driver/dashboard/toko/:id",
+      path: "/driver/dashboard/toko",
       element: <PrivateRoutes><ViewOrder /></PrivateRoutes>
     },
     {
-      path: "/seller/:id",
+      path: "/toko/:id",
       element: <PrivateRoutes><Seller /></PrivateRoutes>
     },
     {
-      path: "/seller/print",
+      path: "/toko/print",
       element: <PrivateRoutes><Print /></PrivateRoutes>
     },
     {
-      path: "/seller/keranjang",
+      path: "/toko/keranjang",
       element: <PrivateRoutes><Keranjang /></PrivateRoutes>
     },
     {

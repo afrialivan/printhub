@@ -15,10 +15,16 @@ import bintangOutline from './bintangOutline.svg'
 import chatIcon from './chatIcon.svg'
 import arah from './arah.svg'
 import info from './info.svg'
-import keranjang from './keranjag.svg'
+import keranjangIcon from './keranjag.svg'
+import backIcon from './back.svg'
+import marker from './marker.png'
+import bunga from './bunga.png'
 
 const images = {
-  keranjang,
+  bunga,
+  marker,
+  backIcon,
+  keranjangIcon,
   info,
   arah,
   chatIcon,

@@ -17,19 +17,20 @@ const InputButton = ({ icon, buttonIcon, placeholder, setInput, type }) => {
   return (
     <div className={`grid mx-6 mt-5 relative`}>
       <div className="absolute flex left-6 items-center h-full">
-        <img src={icon} className="w-5"/>
+        <img src={icon} className="w-5" />
       </div>
-      {buttonIcon &&
-        <button onClick={setType} className="bg-transparent border-none absolute flex right-6 items-center h-full">
-          <img src={buttonIcon} className="w-5 " />
-        </button>
-      }
+
       <input
         type={typeInput}
         className="border rounded-lg h-12 pl-16 bg-white text-black"
         placeholder={placeholder}
         onChange={(e) => setInput(e.target.value)}
       />
+      {buttonIcon &&
+        <button onClick={setType} className="bg-transparent border-none absolute flex right-6 items-center h-full">
+          <img src={buttonIcon} className="w-5 " />
+        </button>
+      }
     </div>
   )
 }

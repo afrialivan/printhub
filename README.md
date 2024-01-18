@@ -96,8 +96,6 @@ Pesanan telah diterima oleh Anda
 ## Halaman Pembayaran
 ![alt text](https://github.com/afrialivan/printhub/blob/main/public/halamanPembayaran.png?raw=true)
 
-Di halaman ini akan menampilkan detail pesanan Anda, Nomor rekening yang akan ditransfer, dan juga input untuk mengupload bukti pembayaran
-
 # Penjual
 
 ## Halaman Dashboard Penjual

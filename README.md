@@ -21,7 +21,7 @@ Kami mengembangkan sebuah platform yang mengintegrasikan layanan cetak dan fotok
 pastikan sudah menginstal Backendnya di
 https://github.com/afrialivan/api-printhub
 
-## Untuk menjalan code
+## Untuk menjalankan code
 ### `npm run dev`
 
 ## akun

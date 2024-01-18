@@ -26,6 +26,12 @@ const Home = () => {
     if (!filteredUser) {
       navigate('/new-user')
     }
+    if (filteredUser.role === 'seller') {
+      navigate('/seller/dashboard')
+    }
+    if (filteredUser.role === 'driver') {
+      navigate('/driver')
+    }
   }
 
   useEffect(() => {

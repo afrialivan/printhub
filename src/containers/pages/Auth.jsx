@@ -116,7 +116,7 @@ const Auth = () => {
 
           </div>
           :
-          <div className="w-screen h-2/3 bg-white absolute bottom-0 rounded-t-3xl">
+          <div className="pb-3 w-screen h-2/3 bg-white absolute bottom-0 rounded-t-3xl">
             <div>
               <h1 className="text-center text-[#2D3250] font-semibold mt-7 -mb-2">welcome</h1>
               <p className="text-center text-[#A5A7B3] font-light text-[12px] mb-5">Ayo mulai dengan memasukkan email untuk login</p>

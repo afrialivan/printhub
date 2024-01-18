@@ -174,7 +174,6 @@ const PesananDetail = () => {
       console.log('error');
     }
   }
-
   return (
     <Default>
       <p className="text-lg text-center text-[#2D3256] font-semibold">Pesanan {user.role === 'user' ? 'Saya' : 'User'}</p>
@@ -183,6 +182,9 @@ const PesananDetail = () => {
         <div className="flex flex-col gap-3">
           {order.keranjang.map((item) =>
             <div key={item.id}>
+              {
+                console.log(user.id )
+              }
               <div className="flex justify-between items-center">
                 <div className="flex items-center">
                   <div style={{ backgroundImage: `url(${item.gambar})` }} className="w-20 h-20 bg-cover overflow-hidden bg-[#2D3256] rounded-lg flex justify-center items-center">
